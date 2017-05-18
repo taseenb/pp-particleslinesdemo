@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Morphing particles demo - Perky Pat</title>
+    <meta property="og:description" content="Three.js + FBO // Morph + noise demo">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" href="js/vendor/dat.gui.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js"></script>
+    <script src="js/vendor/OrbitControls.js"></script>
+    <script src="js/vendor/Detector.js"></script>
+    <script src="js/vendor/dat.gui.js"></script>
+    <script src="js/vendor/stats.min.js"></script>
+    <script src="js/fbo.js"></script>
+</head>
+<body class="show-loader">
+
+<div id="loader"></div>
+
+<div id="ui-btn">
+    <span class="show">Show info</span>
+    <span class="hide">Hide info</span>
+</div>
+
+<div id="ui" class="show">
+    <div class="info">
+        <h3>Particles connected by lines</h3>
+        <p>
+            500 particles floating and bouncing inside a sphere. When passing close to another particle a line is generated. The closer, the brighter.
+            [ <a href="https://github.com/taseenb/pp-particleslinesdemo">Source</a> ]
+            <span class="credits">Perky Pat // Esteban Almiron</span>
+        </p>
+    </div>
+</div>
+
+
+<script src="js/bundle.js"></script>
+</body>
+</html>
