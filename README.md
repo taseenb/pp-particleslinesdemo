@@ -1,2 +1,2 @@
 # pp-particleslinesdemo
-Particles and lines demo
+Connected particles demo

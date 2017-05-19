@@ -12,7 +12,8 @@ function Particles(opt) {
     maxConnections: 2,
     maxTotalConnections: 500,
     speed: 3,
-    rotationSpeed: 0.25
+    rotationSpeed: 0.25,
+    showSphere: true
   };
 
   this.params = Object.assign({}, defaults, opt);
@@ -42,12 +43,17 @@ Particles.prototype = {
       .initGroup()
       .initMaterials()
       .initRenderer()
+      .initUI()
       .initDatGui()
       .initStats()
       .initControls()
-      // .initEvents()
+      .initEvents()
+
+      .onWindowResize()
       // .initExport()
+      .initMouseParallax()
       .initElements()
+      .initBg()
       .initClock()
 
       .animate();
@@ -85,7 +91,7 @@ Particles.prototype = {
 
   initScene: function () {
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x000000, 0.0007);
+    this.scene.fog = new THREE.FogExp2(0x000000, 0.0003);
 
     return this;
   },
@@ -114,7 +120,18 @@ Particles.prototype = {
     this.linesMaterial = new THREE.LineBasicMaterial({
       vertexColors: THREE.VertexColors,
       blending: THREE.AdditiveBlending,
-      transparent: true
+      transparent: true,
+      fog: true,
+      color: 0xFFFFFF
+    });
+
+    this.sphereMaterial = new THREE.MeshBasicMaterial({
+      wireframe: true,
+      wireframeLinewidth: 0.1,
+      transparent: true,
+      opacity: 0.1,
+      fog: true,
+      blending: THREE.AdditiveBlending,
     });
 
     return this;
@@ -133,13 +150,33 @@ Particles.prototype = {
     return this;
   },
 
+  initUI: function() {
+    this.uiContainer = document.getElementById('ui');
+
+    // Show/hide UI button
+    document.getElementById('ui-btn').addEventListener('click', (e) => {
+      document.body.classList.toggle('show-ui');
+    });
+
+    return this;
+  },
+
   initDatGui: function () {
-    this.gui = new dat.GUI();
-    this.gui.add(this.params, 'radius', 50, 1000).listen();
+    this.gui = new dat.GUI({autoPlace: false});
+    // this.gui.add(this.params, 'radius', 50, 1000).listen();
     this.gui.add(this.params, 'maxDistance', 0, 1000).listen();
     this.gui.add(this.params, 'maxConnections', 1, 20).step(1).listen();
     this.gui.add(this.params, 'speed', 0, 20).listen();
     this.gui.add(this.params, 'rotationSpeed', 0, 1).step(0.01).listen();
+    var showSphereControl = this.gui.add(this.params, 'showSphere');
+    showSphereControl.onChange((show) => {
+      if (this.sphereMesh) {
+        this.sphereMesh.material.visible = show;
+        this.sphereMesh.material.needsUpdate = true;
+      }
+    });
+
+    this.uiContainer.appendChild(this.gui.domElement);
 
     return this;
   },
@@ -154,16 +191,43 @@ Particles.prototype = {
     this.stats = new Stats();
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.top = '0px';
-    this.container.appendChild(this.stats.domElement);
+    this.stats.dom.id = 'stats';
+    this.uiContainer.appendChild(this.stats.domElement);
 
     return this;
   },
 
   initEvents: function () {
-    document.addEventListener('mousemove', this.onDocumentMouseMove.bind(this), false);
-    document.addEventListener('touchstart', this.onDocumentTouchStart.bind(this), false);
-    document.addEventListener('touchmove', this.onDocumentTouchMove.bind(this), false);
+    // document.addEventListener('mousemove', this.onDocumentMouseMove.bind(this), false);
+    // document.addEventListener('touchstart', this.onDocumentTouchStart.bind(this), false);
+    // document.addEventListener('touchmove', this.onDocumentTouchMove.bind(this), false);
     window.addEventListener('resize', this.onWindowResize.bind(this), false);
+
+    return this;
+  },
+
+  initMouseParallax: function() {
+    // Mouse parallax effect
+    this.cameraDistance = 1.75; //isMobile ? 2 : 1.75;
+    this.theta = 0 * Math.PI / 180;
+    this.angleOffset = 40;
+    this.mouseOffset = new THREE.Vector2();
+    this.tmpQuat1 = new THREE.Quaternion();
+    this.tmpQuat2 = new THREE.Quaternion();
+    this.AXIS_X = new THREE.Vector3(1, 0, 0);
+    this.AXIS_Y = new THREE.Vector3(0, 1, 0);
+
+    // Mouse parallax
+    document.addEventListener('mousemove', (e) => {
+      var x = e.clientX;
+      var y = e.clientY;
+      TweenMax.to(this.mouseOffset, 0.5, {
+        x: (x / this.w * 2 - 1),
+        y: (y / this.h * 2 - 1),
+        ease: 'expoOut',
+        overwrite: 'all'
+      });
+    });
 
     return this;
   },
@@ -176,13 +240,6 @@ Particles.prototype = {
 
     // Create sphere
     this.sphereGeometry = new THREE.SphereBufferGeometry(r, 16, 16);
-    this.sphereMaterial = new THREE.MeshBasicMaterial({
-      wireframe: true,
-      wireframeLinewidth: 0.1,
-      transparent: true,
-      opacity: 0.2,
-      fog: true
-    });
     this.sphereMesh = new THREE.Mesh(this.sphereGeometry, this.sphereMaterial);
     this.group.add(this.sphereMesh);
 
@@ -251,12 +308,25 @@ Particles.prototype = {
     return data;
   },
 
+  initBg: function () {
+    if (!isMobile.any) {
+      this.background = createBackground();
+      this.scene.add(this.background);
+    }
+
+    return this;
+  },
+
   onWindowResize: function () {
-    this.windowHalfX = window.innerWidth / 2;
-    this.windowHalfY = window.innerHeight / 2;
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.w = window.innerWidth;
+    this.h = window.innerHeight;
+    this.windowHalfX = this.w / 2;
+    this.windowHalfY = this.h / 2;
+    this.camera.aspect = this.w / this.h;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(this.w, this.h);
+
+    return this;
   },
 
   onDocumentMouseMove: function (event) {
@@ -401,26 +471,45 @@ Particles.prototype = {
     this.linesMesh.geometry.attributes.position.needsUpdate = true;
     this.linesMesh.geometry.attributes.color.needsUpdate = true;
     this.pointCloud.geometry.attributes.position.needsUpdate = true;
+
+    // BG
+    if (!isMobile.any) {
+      // Camera + mouse parallax effect
+      const phi = Math.PI / 2;
+      // camera.position.x = Math.sin(phi) * Math.sin(theta);
+      // camera.position.y = Math.cos(phi);
+      // camera.position.z = 300 * (Math.sin(phi) * Math.cos(theta));
+      const radius = this.cameraDistance;
+      const radianOffset = this.angleOffset * Math.PI / 180;
+      const xOff = this.mouseOffset.y * radianOffset;
+      const yOff = this.mouseOffset.x * radianOffset;
+      this.tmpQuat1.setFromAxisAngle(this.AXIS_X, -xOff);
+      this.tmpQuat2.setFromAxisAngle(this.AXIS_Y, -yOff);
+      this.tmpQuat1.multiply(this.tmpQuat2);
+      // camera.position.applyQuaternion(tmpQuat1);
+      // camera.position.multiplyScalar(radius);
+      // target.set(0, 0, 0);
+      // camera.lookAt(target);
+
+      this.background.style({
+        aspect: this.w / this.h,
+        aspectCorrection: true,
+        scale: 2.0,
+        offset: [0.2 * yOff, -0.2 * xOff],
+        // ensure even grain scale based on width/height
+        grainScale: 1.5 / Math.min(this.w, this.h)
+      });
+    }
   }
 
 };
-
-
-
-
-// BG
-// if (!isMobile.any) {
-//   background = createBackground();
-//   scene.add(background);
-// }
-
 
 
 window.onload = () => {
 
   // Start
   var p = new Particles({
-    count: 500,
+    count: 250,
     radius: 500,
     maxDistance: 100,
     maxConnections: 5,
@@ -432,8 +521,4 @@ window.onload = () => {
   // UI stuff
   document.body.classList.remove('show-loader');
   document.body.classList.add('show-ui-btn');
-  // Show/hide UI button
-  document.getElementById('ui-btn').addEventListener('click', (e) => {
-    document.body.classList.toggle('show-ui');
-  });
 };

@@ -22,8 +22,10 @@ function createBackground (opt) {
       smooth: { type: 'v2', value: new THREE.Vector2(0.0, 0.5) },
       // color1: { type: 'c', value: new THREE.Color('#e66314') },
       // color1: { type: 'c', value: new THREE.Color('#ce6f13') },
-      color1: { type: 'c', value: new THREE.Color('#39abb2') },
-      color2: { type: 'c', value: new THREE.Color('#283844') }
+      // color2: { type: 'c', value: new THREE.Color('#220103') }
+      color1: { type: 'c', value: new THREE.Color('#b28934') },
+      // color1: { type: 'c', value: new THREE.Color('#dcdcdc') },
+      color2: { type: 'c', value: new THREE.Color('#3d3c41') }
     },
     depthTest: false
   })

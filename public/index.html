@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Morphing particles demo - Perky Pat</title>
+    <title>Connected particles demo - Perky Pat</title>
     <meta property="og:description" content="Three.js + FBO // Morph + noise demo">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
@@ -10,13 +10,12 @@
     <link rel="stylesheet" href="js/vendor/dat.gui.css">
     <link rel="stylesheet" href="css/style.css">
 
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js"></script>
     <script src="js/vendor/OrbitControls.js"></script>
     <script src="js/vendor/Detector.js"></script>
     <script src="js/vendor/dat.gui.js"></script>
     <script src="js/vendor/stats.min.js"></script>
-    <script src="js/fbo.js"></script>
 </head>
 <body class="show-loader">
 
@@ -31,8 +30,9 @@
     <div class="info">
         <h3>Particles connected by lines</h3>
         <p>
-            500 particles floating and bouncing inside a sphere.
+            Particles floating and bouncing inside a sphere.
             Lines connect the particles when they get close to each other. The closer the particles, the brighter the line.
+            Rotate and zoom with mouse / trackpad / touch.
             [ <a href="https://github.com/taseenb/pp-particleslinesdemo">Source</a> ]
             <span class="credits">Perky Pat // Esteban Almiron</span>
         </p>
