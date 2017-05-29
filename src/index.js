@@ -131,7 +131,7 @@ Particles.prototype = {
       transparent: true,
       opacity: 0.1,
       fog: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.AdditiveBlending
     });
 
     return this;
@@ -150,7 +150,7 @@ Particles.prototype = {
     return this;
   },
 
-  initUI: function() {
+  initUI: function () {
     this.uiContainer = document.getElementById('ui');
 
     // Show/hide UI button
@@ -206,7 +206,7 @@ Particles.prototype = {
     return this;
   },
 
-  initMouseParallax: function() {
+  initMouseParallax: function () {
     // Mouse parallax effect
     this.cameraDistance = 1.75; //isMobile ? 2 : 1.75;
     this.theta = 0 * Math.PI / 180;
@@ -309,10 +309,8 @@ Particles.prototype = {
   },
 
   initBg: function () {
-    if (!isMobile.any) {
-      this.background = createBackground();
-      this.scene.add(this.background);
-    }
+    this.background = createBackground();
+    this.scene.add(this.background);
 
     return this;
   },
