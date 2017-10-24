@@ -13,7 +13,7 @@ function Particles(opt) {
     maxTotalConnections: 500,
     speed: 3,
     rotationSpeed: 0.25,
-    showSphere: true
+    showSphere: false
   };
 
   this.params = Object.assign({}, defaults, opt);
