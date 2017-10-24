@@ -16,6 +16,7 @@
     "ncu": "npm-check-updates"
   },
   "dependencies": {
+    "downloadjs": "^1.4.7",
     "glsl-blend-soft-light": "^1.0.5",
     "glsl-film-grain": "^1.0.4",
     "ismobilejs": "^0.4.1",

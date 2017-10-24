@@ -1,6 +1,7 @@
 // var createBackground = require('./bg')
 var Background = require('./bg/Bg')
 var isMobile = require('ismobilejs')
+var download = require('downloadjs')
 
 function Particles (opt) {
   var defaults = {
@@ -14,7 +15,8 @@ function Particles (opt) {
     maxTotalConnections: 500,
     speed: 3,
     rotationSpeed: 0.25,
-    showSphere: false
+    showSphere: false,
+    paused: false
   }
 
   this.params = Object.assign({}, defaults, opt)
@@ -54,6 +56,7 @@ Particles.prototype = {
       .initElements()
       .initBg()
       .initClock()
+      .initKeyEvents()
       .animate()
   },
 
@@ -379,12 +382,14 @@ Particles.prototype = {
   },
 
   render: function () {
-    var time = this.clock.elapsedTime
-    var delta = this.clock.getDelta()
+    if (!this.params.paused) {
+      var time = this.clock.elapsedTime
+      var delta = this.clock.getDelta()
 
-    this.draw(time, delta)
+      this.draw(time, delta)
 
-    this.group.rotation.y = time * this.params.rotationSpeed
+      this.group.rotation.y = time * this.params.rotationSpeed
+    }
     this.renderer.render(this.scene, this.camera)
   },
 
@@ -423,7 +428,9 @@ Particles.prototype = {
       if (
         this.connected > this.params.maxTotalConnections ||
         particleData.connections > this.params.maxConnections
-      ) { continue }
+      ) {
+        continue
+      }
 
       // Check distance from all the other particles
       for (var j = 0; j < count; j++) {
@@ -434,7 +441,9 @@ Particles.prototype = {
         if (
           particleData.connections > this.params.maxConnections ||
           particleDataB.connections > this.params.maxConnections
-        ) { continue }
+        ) {
+          continue
+        }
 
         // Get distance from the current particle
         v2.x = p[j * 3]
@@ -510,6 +519,25 @@ Particles.prototype = {
         grainScale: 1.5 / Math.min(this.w, this.h)
       })
     }
+  },
+
+  takeScreenshot () {
+    this.renderer.render(this.scene, this.camera)
+    const data = this.renderer.domElement.toDataURL()
+    download(data, 'screenshot-' + Date.now() + '.png', 'image/png')
+  },
+
+  initKeyEvents () {
+    document.body.addEventListener('keyup', e => {
+      if (e.key === 'p' || e.key === 'P') {
+        // Toggle pause
+        this.params.paused = !this.params.paused
+      } else if (e.key === 'd' || e.key === 'D') {
+        this.takeScreenshot()
+      }
+    })
+
+    return this
   }
 }
 
