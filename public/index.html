@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Connected particles demo - Perky Pat</title>
-    <meta property="og:description" content="Three.js + FBO // Morph + noise demo">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Particles and lines</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <meta property="og:url" content="https://pp-particleslinesdemo.surge.sh/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Particles and lines" />
+    <meta property="og:description" content="Particles floating and bouncing inside a sphere. Three.js / WebGL" />
+    <meta property="og:image" content="https://pp-particleslinesdemo.surge.sh//img/image.jpg" />
+    <meta property="og:image:width" content="1900" />
+    <meta property="og:image:height" content="1070" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@taseenb" />
 
     <link rel="stylesheet" href="js/vendor/dat.gui.css">
     <link rel="stylesheet" href="css/style.css">
@@ -17,28 +26,32 @@
     <script src="js/vendor/dat.gui.js"></script>
     <script src="js/vendor/stats.min.js"></script>
 </head>
+
 <body class="show-loader">
 
-<div id="loader"></div>
+    <div id="loader"></div>
 
-<div id="ui-btn">
-    <span class="show">Show info</span>
-    <span class="hide">Hide info</span>
-</div>
-
-<div id="ui" class="show">
-    <div class="info">
-        <h3>Particles and lines</h3>
-        <p>
-            Particles floating and bouncing inside a sphere.
-            Rotate and zoom with mouse / trackpad / touch.
-            [ <a href="https://github.com/taseenb/pp-particleslinesdemo">Source</a> ]
-            <span class="credits">Perky Pat // Esteban Almiron</span>
-        </p>
+    <div id="ui-btn">
+        <span class="show">Info</span>
+        <span class="hide">Hide info</span>
     </div>
-</div>
+
+    <div id="ui" class="show">
+        <div class="info">
+            <h3>Particles and lines</h3>
+            <p>
+                Particles floating and bouncing inside a sphere.
+                <br> Three.js / WebGL.
+                <br>
+                <br> [
+                <a href="https://github.com/taseenb/pp-particleslinesdemo">Source</a> ]
+                <span class="credits">Perky Pat // Esteban Almiron</span>
+            </p>
+        </div>
+    </div>
 
 
-<script src="js/bundle.js"></script>
+    <script src="js/bundle.js"></script>
 </body>
+
 </html>
